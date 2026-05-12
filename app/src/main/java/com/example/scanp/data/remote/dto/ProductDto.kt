@@ -9,6 +9,12 @@ data class ProductDto(
     @SerializedName("ingredients_text")
     val ingredientsText: String?,
 
+    @SerializedName("image_small_url")
+    val imageSmallUrl: String?,
+
     @SerializedName("nutriments")
-    val nutriments: NutrimentsDto?
+    val nutriments: NutrimentsDto?,
+
+    @SerializedName("product_type")
+    val productType: String?
 )

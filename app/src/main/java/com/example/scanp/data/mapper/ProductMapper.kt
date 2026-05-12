@@ -21,7 +21,8 @@ fun ProductEntity.toProductDomain(isSaved: Boolean = false): ProductDomain = Pro
     saturatedFat = saturatedFat,
     fibre = fibre,
     salt = salt,
-    isSaved = isSaved
+    isSaved = isSaved,
+    imageUrl = imageUrl
 )
 
 fun ProductDomain.toProductEntity(): ProductEntity = ProductEntity(
@@ -35,7 +36,8 @@ fun ProductDomain.toProductEntity(): ProductEntity = ProductEntity(
     fat = fat,
     saturatedFat = saturatedFat,
     fibre = fibre,
-    salt = salt
+    salt = salt,
+    imageUrl = imageUrl
 )
 
 fun ProductDto.toProductDomain(barcode: String, isSaved: Boolean = false): ProductDomain =
@@ -51,5 +53,6 @@ fun ProductDto.toProductDomain(barcode: String, isSaved: Boolean = false): Produ
         saturatedFat = nutriments?.saturatedFat,
         fibre = nutriments?.fibre,
         salt = nutriments?.salt,
+        imageUrl = imageSmallUrl,
         isSaved = isSaved
     )

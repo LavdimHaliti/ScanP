@@ -22,15 +22,27 @@ fun ScanFoodNavGraph(navController: NavHostController) {
         startDestination = Screen.Scan.route
     ) {
         composable(route = Screen.Scan.route) {
-            ScanScreen()
+            ScanScreen(
+                navigateToNutrition = { barcode -> navController.navigate(Screen.Nutrition.createRoute(barcode)) },
+                navigateToIngredientList = { barcode -> navController.navigate(Screen.IngredientList.createRoute(barcode)) },
+                navigateToHistory = { navController.navigate(Screen.History.route) }
+            )
         }
 
         composable(route = Screen.IngredientList.route) { backStackEntry ->
-            IngredientListScreen()
+            val barcode = backStackEntry.arguments?.getString("barcode") ?: ""
+            IngredientListScreen(
+                barcode = barcode,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         composable(route = Screen.Nutrition.route) { backStackEntry ->
-            NutritionDetailScreen()
+            val barcode = backStackEntry.arguments?.getString("barcode") ?: ""
+            NutritionDetailScreen(
+                barcode = barcode,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         composable(route = Screen.History.route) {

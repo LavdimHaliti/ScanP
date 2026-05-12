@@ -15,5 +15,6 @@ data class ProductEntity(
     val fat: Double?,
     val saturatedFat: Double?,
     val fibre: Double?,
-    val salt: Double?
+    val salt: Double?,
+    val imageUrl: String?
 )

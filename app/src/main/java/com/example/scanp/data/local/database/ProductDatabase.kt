@@ -2,10 +2,10 @@ package com.example.scanp.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.scanfood.data.local.entities.ScanHistoryEntity
 import com.example.scanp.data.local.dao.ProductDao
 import com.example.scanp.data.local.dao.ScanHistoryDao
 import com.example.scanp.data.local.entities.ProductEntity
-import com.example.scanp.data.local.entities.ScanHistoryEntity
 
 /**
  * Room database for the app.
@@ -13,7 +13,7 @@ import com.example.scanp.data.local.entities.ScanHistoryEntity
  */
 @Database(
     entities = [ProductEntity::class, ScanHistoryEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class ProductDatabase : RoomDatabase() {

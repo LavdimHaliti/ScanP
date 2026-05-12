@@ -1,4 +1,4 @@
-package com.example.scanp.data.local.entities
+package com.example.scanfood.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

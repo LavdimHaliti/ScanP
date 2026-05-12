@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.scanp.data.local.entities.ScanHistoryEntity
+import com.example.scanfood.data.local.entities.ScanHistoryEntity
 
 @Dao
 interface ScanHistoryDao {

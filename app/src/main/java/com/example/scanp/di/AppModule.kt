@@ -8,6 +8,7 @@ import com.example.scanp.data.repository.ProductRepositoryImpl
 import com.example.scanp.network.OpenFoodFactsApi
 import com.example.scanp.util.Constants.BASE_URL
 import com.example.scanp.viewmodel.HistoryViewModel
+import com.example.scanp.viewmodel.ProductDetailViewModel
 import com.example.scanp.viewmodel.ScanViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -59,5 +60,6 @@ val repositoryModule = module {
 val viewModelModule = module {
     viewModel { ScanViewModel(get()) }
     viewModel { HistoryViewModel(get()) }
+    viewModel { ProductDetailViewModel(get()) }
 }
 

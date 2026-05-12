@@ -7,7 +7,7 @@ sealed class Screen(val route: String) {
         fun createRoute(barcode: String) = "ingredient/$barcode"
     }
 
-    object Nutrition : Screen("nutrition/barcode") {
+    object Nutrition : Screen("nutrition/{barcode}") {
         fun createRoute(barcode: String) = "nutrition/$barcode"
     }
 

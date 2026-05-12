@@ -17,5 +17,6 @@ data class ProductDomain(
     val saturatedFat: Double?,
     val fibre: Double?,
     val salt: Double?,
+    val imageUrl: String?,
     val isSaved: Boolean = false
 )
