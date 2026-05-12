@@ -8,6 +8,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Icon
@@ -16,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 // Swipe-to-dismiss removed; using delete button instead
 import androidx.compose.runtime.LaunchedEffect
@@ -38,15 +41,21 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryViewModel = koinViewModel()
+    viewModel: HistoryViewModel = koinViewModel(),
+    onItemClick: (String) -> Unit = {},
+    onNavigateBack: () -> Unit = {}
 ) {
     val history by viewModel.history.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Scan History") }
+                title = { Text("Scan History") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
         }
     ) { paddingValues ->
@@ -66,7 +75,7 @@ fun HistoryScreen(
                     .padding(paddingValues)
             ) {
                 items(history) { entry ->
-                    HistoryItem(entry)
+                    HistoryItem(entry, onItemClick)
                     HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
                 }
             }
@@ -75,11 +84,12 @@ fun HistoryScreen(
 }
 
 @Composable
-private fun HistoryItem(entry: ProductDomain) {
+private fun HistoryItem(entry: ProductDomain, onItemClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .clickable { onItemClick(entry.barcode) }
     ) {
         AsyncImage(
             model = entry.imageUrl,

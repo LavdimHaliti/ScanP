@@ -46,7 +46,10 @@ fun ScanFoodNavGraph(navController: NavHostController) {
         }
 
         composable(route = Screen.History.route) {
-            HistoryScreen()
+            HistoryScreen(
+                onItemClick = { barcode -> navController.navigate(Screen.IngredientList.createRoute(barcode)) },
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }

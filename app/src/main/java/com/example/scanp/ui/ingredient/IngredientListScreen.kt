@@ -12,34 +12,51 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.scanp.ui.uistate.ProductDetailUiState
 import com.example.scanp.viewmodel.ProductDetailViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientListScreen(
     barcode: String,
     onNavigateBack: () -> Unit,
     viewModel: ProductDetailViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Ingredients") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            IngredientListContent(
+                uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
+                barcode = barcode,
+                loadProduct = { bc -> viewModel.loadProduct(bc) }
+            )
+        }
+    }
+    return
 
-    IngredientListContent(
-        uiState = uiState,
-        barcode = barcode,
-        loadProduct = { barcode -> viewModel.loadProduct(barcode) },
-        onNavigateBack = { onNavigateBack() }
-    )
 }
 
 @Composable
 fun IngredientListContent(
     uiState: ProductDetailUiState,
     barcode: String,
-    loadProduct: (String) -> Unit,
-    onNavigateBack: () -> Unit
+    loadProduct: (String) -> Unit
 ) {
     LaunchedEffect(barcode) {
         if (barcode.isNotEmpty()) {
@@ -50,19 +67,9 @@ fun IngredientListContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .statusBarsPadding()
-            .navigationBarsPadding()
+            .padding(start = 16.dp, end = 16.dp)
             .verticalScroll(rememberScrollState()),
     ) {
-        Text(
-            text = "Ingredients",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         when {
             uiState.isLoading -> {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -124,16 +131,6 @@ fun IngredientListContent(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { onNavigateBack() },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text("Back to Scan")
         }
     }
 }
