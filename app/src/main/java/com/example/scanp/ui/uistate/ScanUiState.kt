@@ -6,5 +6,6 @@ data class ScanUiState(
     val isLoading: Boolean = false,
     val product: ProductDomain? = null,
     val error: String? = null,
-    val lastBarcode: String? = null
+    val lastBarcode: String? = null,
+    val isNonFoodProduct: Boolean = false
 )

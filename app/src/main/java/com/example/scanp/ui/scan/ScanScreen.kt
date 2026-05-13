@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.scanp.data.domain.ProductDomain
@@ -26,6 +28,7 @@ fun ScanScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var scannedBarcode by remember { mutableStateOf<String?>(null) }
     var showBarcodeDialog by remember { mutableStateOf(false) }
+    var showNonFoodDialog by remember { mutableStateOf(false) }
     var scanKey by remember { mutableStateOf(0) }
 
     ScanScreenContent(
@@ -44,7 +47,9 @@ fun ScanScreen(
         onShowBarcodeDialog = { showBarcodeDialog = true },
         showBarcodeDialog = showBarcodeDialog,
         barcodeDialog = { showBarcodeDialog = it },
-        scanKey = scanKey
+        scanKey = scanKey,
+        showNonFoodDialog = showNonFoodDialog,
+        onShowNonFoodDialog = { showNonFoodDialog = it }
     )
 
 }
@@ -63,8 +68,15 @@ fun ScanScreenContent(
     onShowBarcodeDialog: () -> Unit,
     showBarcodeDialog: Boolean,
     barcodeDialog: (Boolean) -> Unit,
-    scanKey: Int
+    scanKey: Int,
+    showNonFoodDialog: Boolean,
+    onShowNonFoodDialog: (Boolean) -> Unit
 ) {
+    LaunchedEffect(uiState.isNonFoodProduct) {
+        if (uiState.isNonFoodProduct) {
+            onShowNonFoodDialog(true)
+        }
+    }
     LaunchedEffect(scannedBarcode) {
         scannedBarcode?.let { barcode ->
             fetchProduct(barcode)
@@ -89,10 +101,19 @@ fun ScanScreenContent(
             )
         }
 
+        if (showNonFoodDialog) {
+            NonFoodProductDialog(
+                onScanAgain = {
+                    onShowNonFoodDialog(false)
+                    resetScan()
+                }
+            )
+        }
+
         key(scanKey) {
             ScannerView(
                 onBarcodeDetected = { barcode ->
-                    if (!uiState.isLoading && uiState.product == null) {
+                    if (!uiState.isLoading && uiState.product == null && !uiState.isNonFoodProduct) {
                         onScanBarScanned(barcode)
                     }
                 },
@@ -107,7 +128,7 @@ fun ScanScreenContent(
                 LoadingView()
             }
 
-            uiState.product != null -> {
+            uiState.product != null && !uiState.isNonFoodProduct -> {
                 ProductResultCard(
                     product = uiState.product,
                     onNutritionClick = {
@@ -346,6 +367,49 @@ fun BarcodeEntryDialog(
                     ) {
                         Text("OK")
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun NonFoodProductDialog(
+    onScanAgain: () -> Unit
+) {
+    Dialog(onDismissRequest = onScanAgain) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = "Warning",
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Not a Food Product",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "This doesn't appear to be a food product. Please scan a food item.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onScanAgain,
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Scan Again")
                 }
             }
         }

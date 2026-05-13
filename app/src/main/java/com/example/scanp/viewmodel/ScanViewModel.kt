@@ -42,7 +42,11 @@ class ScanViewModel(
                 val product = result.getOrNull()!!
                 repository.saveProduct(product)
                 repository.saveScanHistory(barcode)
-                _uiState.value = ScanUiState(product = product, lastBarcode = barcode)
+                _uiState.value = ScanUiState(
+                    product = product,
+                    lastBarcode = barcode,
+                    isNonFoodProduct = product.ingredients.isNullOrBlank()
+                )
             } else {
                 _uiState.value = ScanUiState(
                     error = result.exceptionOrNull()?.message ?: "Unknown error",
