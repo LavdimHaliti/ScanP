@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.scanp"
+    namespace = "com.example.scanfood"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -14,7 +14,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.scanp"
+        applicationId = "com.example.scanfood"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
