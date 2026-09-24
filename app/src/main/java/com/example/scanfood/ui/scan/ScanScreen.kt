@@ -23,7 +23,7 @@ fun ScanScreen(
     navigateToNutrition: (String) -> Unit,
     navigateToIngredientList: (String) -> Unit,
     navigateToHistory: () -> Unit,
-    viewModel: ScanViewModel = koinViewModel()
+    viewModel: ScanViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var scannedBarcode by remember { mutableStateOf<String?>(null) }

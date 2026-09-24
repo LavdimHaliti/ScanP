@@ -17,7 +17,7 @@ import com.example.scanfood.ui.uistate.ProductDetailUiState
 fun NutritionDetailScreen(
     barcode: String,
     onNavigateBack: () -> Unit,
-    viewModel: ProductDetailViewModel = koinViewModel()
+    viewModel: ProductDetailViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

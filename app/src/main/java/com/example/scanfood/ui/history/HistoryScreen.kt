@@ -25,7 +25,7 @@ import com.example.scanfood.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryViewModel = koinViewModel(),
+    viewModel: HistoryViewModel,
     onItemClick: (String) -> Unit = {},
     onNavigateBack: () -> Unit = {}
 ) {

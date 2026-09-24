@@ -25,7 +25,7 @@ import org.koin.androidx.compose.koinViewModel
 fun IngredientListScreen(
     barcode: String,
     onNavigateBack: () -> Unit,
-    viewModel: ProductDetailViewModel = koinViewModel()
+    viewModel: ProductDetailViewModel,
 ) {
     Scaffold(
         topBar = {

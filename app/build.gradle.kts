@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     id("com.google.devtools.ksp")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
@@ -81,6 +82,10 @@ dependencies {
     implementation(libs.androidx.camera.view)
     
     implementation(libs.mlkit.barcode.scanning)
+
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.kotlinx.serialization.core)
 
     implementation("androidx.compose.material:material-icons-core:1.7.8")
 

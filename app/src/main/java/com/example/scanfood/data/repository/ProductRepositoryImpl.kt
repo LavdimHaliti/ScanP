@@ -1,5 +1,6 @@
 package com.example.scanfood.data.repository
 
+import android.util.Log
 import com.example.scanfood.data.local.entities.ScanHistoryEntity
 import com.example.scanfood.data.domain.ProductDomain
 import com.example.scanfood.data.local.dao.ProductDao
