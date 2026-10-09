@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.scanfood"
+    namespace = "com.example.scanp"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.scanfood"
+        applicationId = "com.example.scanp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -87,6 +87,6 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.kotlinx.serialization.core)
 
-    implementation("androidx.compose.material:material-icons-core:1.7.8")
+    implementation(libs.androidx.compose.material.icons.core)
 
 }
