@@ -68,14 +68,14 @@ class ProductRepositoryImpl(
         return scanHistoryDao.getAllHistory().map { historyList ->
 
             // Distinct product by barcode
-            val productHistory = historyList.distinctBy { it.barcode }
+            val productHistoryList = historyList.distinctBy { it.barcode }
 
             // One query for all products
-            val barcodes = productHistory.map { it.barcode }
+            val barcodes = productHistoryList.map { it.barcode }
             val productMap = productDao.getProductsByBarcodes(barcodes).associateBy { it.barcode }
 
             // Map to default values
-            productHistory.map { product ->
+            productHistoryList.map { product ->
                 productMap[product.barcode]?.toProductDomain(isSaved = true) ?: product.toDefaultValuesDomain()
             }
         }
