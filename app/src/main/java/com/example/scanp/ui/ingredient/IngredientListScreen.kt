@@ -15,15 +15,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.scanp.ui.uistate.ProductDetailUiState
+import com.example.scanp.viewmodel.ProductDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientListScreen(
-    uiState: ProductDetailUiState,
     barcode: String,
     onNavigateBack: () -> Unit,
-    loadProduct: (String) -> Unit
+    viewModel: ProductDetailViewModel,
 ) {
     Scaffold(
         topBar = {
@@ -39,9 +40,9 @@ fun IngredientListScreen(
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             IngredientListContent(
-                uiState = uiState,
+                uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
                 barcode = barcode,
-                loadProduct = { barcode -> loadProduct(barcode) }
+                loadProduct = { bc -> viewModel.loadProduct(bc) }
             )
         }
     }

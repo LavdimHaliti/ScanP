@@ -8,20 +8,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Arrangement
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.scanp.ui.uistate.ProductDetailUiState
+import com.example.scanp.viewmodel.ProductDetailViewModel
 
 @Composable
 fun NutritionDetailScreen(
-    uiState: ProductDetailUiState,
     barcode: String,
     onNavigateBack: () -> Unit,
-    loadProduct: (String) -> Unit
+    viewModel: ProductDetailViewModel
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     NutritionContent(
         uiState = uiState,
         barcode = barcode,
         onNavigateBack = { onNavigateBack() },
-        loadProduct = { barcode -> loadProduct(barcode) }
+        loadProduct = { barcode -> viewModel.loadProduct(barcode) }
 
     )
 }

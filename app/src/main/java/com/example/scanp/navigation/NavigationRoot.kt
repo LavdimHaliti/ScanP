@@ -23,10 +23,6 @@ fun NavigationRoot() {
     val scanHistoryViewModel: HistoryViewModel = koinViewModel()
     val productDetailViewModel: ProductDetailViewModel = koinViewModel()
 
-    val scanUiState by scanViewModel.uiState.collectAsStateWithLifecycle()
-    val scanHistory by scanHistoryViewModel.history.collectAsStateWithLifecycle()
-    val productDetailUiState by productDetailViewModel.uiState.collectAsStateWithLifecycle()
-
     NavDisplay(
         backStack = backStack,
         entryProvider = { key ->
@@ -34,7 +30,7 @@ fun NavigationRoot() {
                 is Route.ScanScreen ->  {
                     NavEntry(key) {
                         ScanScreen(
-                            uiState = scanUiState,
+                            viewModel = scanViewModel,
                             navigateToHistory = {
                                 backStack.add(Route.HistoryScreen)
                             },
@@ -43,10 +39,7 @@ fun NavigationRoot() {
                             },
                             navigateToIngredientList = { barcode ->
                                 backStack.add(Route.IngredientListScreen(barcode))
-                            },
-                            fetchProduct = { barcode -> scanViewModel.fetchProduct(barcode) },
-                            resetScan = { scanViewModel.resetScan() },
-                            clearError = { scanViewModel.clearError() }
+                            }
                         )
                     }
                 }
@@ -54,7 +47,7 @@ fun NavigationRoot() {
                 is Route.HistoryScreen -> {
                     NavEntry(key) {
                         HistoryScreen(
-                            history = scanHistory,
+                            viewModel = scanHistoryViewModel,
                             onItemClick = { barcode -> backStack.add(Route.IngredientListScreen(barcode)) },
                             onNavigateBack = { backStack.removeLastOrNull() }
                         )
@@ -64,10 +57,9 @@ fun NavigationRoot() {
                 is Route.IngredientListScreen -> {
                     NavEntry(key) {
                         IngredientListScreen(
-                            uiState = productDetailUiState,
+                            viewModel = productDetailViewModel,
                             barcode = key.barcode,
-                            onNavigateBack = { backStack.removeLastOrNull() },
-                            loadProduct = { barcode -> productDetailViewModel.loadProduct(barcode) }
+                            onNavigateBack = { backStack.removeLastOrNull() }
                         )
                     }
                 }
@@ -75,10 +67,9 @@ fun NavigationRoot() {
                 is Route.NutritionDetailScreen -> {
                     NavEntry(key) {
                         NutritionDetailScreen(
-                            uiState = productDetailUiState,
+                            viewModel = productDetailViewModel,
                             barcode = key.barcode,
-                            onNavigateBack = { backStack.removeLastOrNull() },
-                            loadProduct = { barcode -> productDetailViewModel.loadProduct(barcode) }
+                            onNavigateBack = { backStack.removeLastOrNull() }
                         )
                     }
                 }

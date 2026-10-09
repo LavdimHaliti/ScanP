@@ -2,29 +2,34 @@ package com.example.scanp.ui.history
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.example.scanp.data.domain.ProductDomain
 import com.example.scanp.R
+import com.example.scanp.data.domain.ProductDomain
+import com.example.scanp.viewmodel.HistoryViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    history: List<ProductDomain>,
+    viewModel: HistoryViewModel,
     onItemClick: (String) -> Unit = {},
     onNavigateBack: () -> Unit = {}
 ) {
+    val history by viewModel.history.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             TopAppBar(

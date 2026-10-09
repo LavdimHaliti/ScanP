@@ -10,20 +10,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.scanp.data.domain.ProductDomain
 import com.example.scanp.ui.uistate.ScanUiState
 import com.example.scanp.util.General.hasNutrition
+import com.example.scanp.viewmodel.ScanViewModel
 
 @Composable
 fun ScanScreen(
-    uiState: ScanUiState,
     navigateToNutrition: (String) -> Unit,
     navigateToIngredientList: (String) -> Unit,
     navigateToHistory: () -> Unit,
-    fetchProduct: (String) -> Unit,
-    resetScan: () -> Unit,
-    clearError: () -> Unit
+    viewModel: ScanViewModel
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var scannedBarcode by remember { mutableStateOf<String?>(null) }
     var showBarcodeDialog by remember { mutableStateOf(false) }
     var scanKey by remember { mutableIntStateOf(0) }
@@ -32,15 +32,15 @@ fun ScanScreen(
         uiState = uiState,
         scannedBarcode = scannedBarcode,
         onScanBarScanned = { scannedBarcode = it },
-        fetchProduct = { barcode -> fetchProduct(barcode) },
+        fetchProduct = { barcode -> viewModel.fetchProduct(barcode) },
         navigateToNutrition = { barcode -> navigateToNutrition(barcode) },
         navigateToIngredientList = { barcode -> navigateToIngredientList(barcode) },
         navigateToHistory = { navigateToHistory() },
         resetScan = {
-            resetScan()
+            viewModel.resetScan()
             scanKey++
         },
-        clearError = { clearError() },
+        clearError = { viewModel.clearError() },
         onShowBarcodeDialog = { showBarcodeDialog = true },
         showBarcodeDialog = showBarcodeDialog,
         barcodeDialog = { showBarcodeDialog = it },
