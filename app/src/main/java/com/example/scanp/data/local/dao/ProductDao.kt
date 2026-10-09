@@ -13,4 +13,7 @@ interface ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProduct(product: ProductEntity)
+
+    @Query("SELECT * FROM products_table WHERE barcode IN (:barcodes)")
+    suspend fun getProductsByBarcodes(barcodes: List<String>): List<ProductEntity>
 }

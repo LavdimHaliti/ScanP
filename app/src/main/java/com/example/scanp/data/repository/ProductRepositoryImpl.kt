@@ -7,6 +7,7 @@ import com.example.scanp.data.local.dao.ScanHistoryDao
 import com.example.scanp.data.mapper.toProductDomain
 import com.example.scanp.data.mapper.toProductEntity
 import com.example.scanp.network.OpenFoodFactsApi
+import com.example.scanp.util.General.toDefaultValuesDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -64,28 +65,20 @@ class ProductRepositoryImpl(
      * placeholder with only the barcode is created.
      */
     override fun getAllHistory(): Flow<List<ProductDomain>> {
-        val productHistories = scanHistoryDao.getAllHistory().map { scanHistoryList -> scanHistoryList.distinctBy { it.barcode } }
-        return productHistories.map { productHistoryList ->
-            productHistoryList.map { product ->
-                val productEntity = productDao.getProduct(product.barcode)
-                productEntity?.toProductDomain(isSaved = true)
-                    ?: ProductDomain(
-                        barcode = product.barcode,
-                        name = null,
-                        productType = null,
-                        ingredients = null,
-                        energyKcal = null,
-                        proteins = null,
-                        carbs = null,
-                        sugars = null,
-                        fat = null,
-                        saturatedFat = null,
-                        fibre = null,
-                        salt = null,
-                        imageUrl = null,
-                        isSaved = false
-                    )
+        return scanHistoryDao.getAllHistory().map { historyList ->
+
+            // Distinct product by barcode
+            val productHistory = historyList.distinctBy { it.barcode }
+
+            // One query for all products
+            val barcodes = productHistory.map { it.barcode }
+            val productMap = productDao.getProductsByBarcodes(barcodes).associateBy { it.barcode }
+
+            // Map to default values
+            productHistory.map { product ->
+                productMap[product.barcode]?.toProductDomain(isSaved = true) ?: product.toDefaultValuesDomain()
             }
         }
     }
+
 }
