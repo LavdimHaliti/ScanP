@@ -15,7 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.scanp.data.domain.ProductDomain
 import com.example.scanp.ui.uistate.ProductDetailUiState
 import com.example.scanp.viewmodel.ProductDetailViewModel
 
@@ -306,4 +308,35 @@ fun PotentialRisksSection(risks: List<String>) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun IngredientListScreenPreview() {
+    val product = ProductDomain(
+        barcode = "0800897003968",
+        name = "Sample Product",
+        productType = null,
+        ingredients = "Water, Sugar, Salt, Citric Acid",
+        energyKcal = null,
+        proteins = null,
+        carbs = null,
+        sugars = null,
+        fat = null,
+        saturatedFat = null,
+        fibre = null,
+        salt = null,
+        imageUrl = null,
+        isSaved = false
+    )
+
+    IngredientListContent(
+        uiState = ProductDetailUiState(
+            product = product,
+            isLoading = false,
+            error = null
+        ),
+        barcode = "0800897003968",
+        loadProduct = {}
+    )
 }

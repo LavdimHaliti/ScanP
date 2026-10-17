@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -361,4 +362,45 @@ fun ProductActionButtons(
             Text("Ingredients")
         }
     }
+}
+
+@Preview
+@Composable
+fun ScanScreenPreview() {
+    val product = ProductDomain(
+        barcode = "0800897003968",
+        name = "Sample Product",
+        productType = null,
+        ingredients = "Water, Sugar, Salt, Citric Acid",
+        energyKcal = 1.00,
+        proteins = 1.00,
+        carbs = 1.00,
+        sugars = 1.00,
+        fat = 1.00,
+        saturatedFat = 1.00,
+        fibre = 1.00,
+        salt = 1.00,
+        imageUrl = null,
+        isSaved = false
+    )
+    ScanScreenContent(
+        uiState = ScanUiState(
+            product = product,
+            isLoading = false,
+            error = "Can't scan barcode",
+            lastBarcode = "0800897003968"
+        ),
+        scannedBarcode = "0800897003968",
+        onScanBarScanned = {},
+        fetchProduct = {},
+        navigateToHistory = {},
+        navigateToNutrition = {},
+        navigateToIngredientList = {},
+        resetScan = {},
+        clearError = {},
+        onShowBarcodeDialog = {},
+        showBarcodeDialog = false,
+        barcodeDialog = { it -> !it },
+        scanKey = 1
+    )
 }

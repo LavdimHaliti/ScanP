@@ -8,7 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.scanp.data.domain.ProductDomain
 import com.example.scanp.ui.uistate.ProductDetailUiState
 import com.example.scanp.viewmodel.ProductDetailViewModel
 
@@ -136,4 +138,35 @@ fun NutritionRow(label: String, value: String) {
         )
     }
     HorizontalDivider()
+}
+
+@Preview
+@Composable
+fun NutritionDetailScreenPreview(){
+    val product = ProductDomain(
+        barcode = "0800897003968",
+        name = "Sample Product",
+        productType = null,
+        ingredients = "Water, Sugar, Salt, Citric Acid",
+        energyKcal = 1.00,
+        proteins = 1.00,
+        carbs = 1.00,
+        sugars = 1.00,
+        fat = 1.00,
+        saturatedFat = 1.00,
+        fibre = 1.00,
+        salt = 1.00,
+        imageUrl = null,
+        isSaved = false
+    )
+    NutritionContent(
+        uiState = ProductDetailUiState(
+            product = product,
+            isLoading = false,
+            error = "Can't load details"
+        ),
+        barcode = "0800897003968",
+        onNavigateBack = {},
+        loadProduct = {}
+    )
 }

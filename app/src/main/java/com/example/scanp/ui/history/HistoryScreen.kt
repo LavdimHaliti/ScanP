@@ -14,14 +14,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.scanp.R
 import com.example.scanp.data.domain.ProductDomain
+import com.example.scanp.util.ProductTypeEnum
 import com.example.scanp.viewmodel.HistoryViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel,
@@ -30,6 +31,20 @@ fun HistoryScreen(
 ) {
     val history by viewModel.history.collectAsStateWithLifecycle()
 
+    HistoryScreenContent(
+        historyList = history,
+        onItemClick = onItemClick,
+        onNavigateBack = onNavigateBack
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HistoryScreenContent(
+    historyList: List<ProductDomain>,
+    onItemClick: (String) -> Unit,
+    onNavigateBack: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -42,7 +57,7 @@ fun HistoryScreen(
             )
         }
     ) { paddingValues ->
-        if (history.isEmpty()) {
+        if (historyList.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -57,7 +72,7 @@ fun HistoryScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                items(history) { entry ->
+                items(historyList) { entry ->
                     HistoryItem(entry, onItemClick)
                     HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
                 }
@@ -90,4 +105,73 @@ private fun HistoryItem(entry: ProductDomain, onItemClick: (String) -> Unit) {
         }
 
     }
+}
+
+@Preview
+@Composable
+fun HistoryScreenPreview() {
+    HistoryScreenContent(
+        historyList = listOf(
+            ProductDomain(
+                barcode = "1234567890123",
+                name = "Organic Whole Milk",
+                productType = ProductTypeEnum.FOOD,
+                ingredients = "Milk",
+                energyKcal = 60.0,
+                proteins = 3.3,
+                carbs = 4.8,
+                sugars = 4.8,
+                fat = 3.5,
+                saturatedFat = 2.2,
+                fibre = 0.0,
+                salt = 0.1,
+                imageUrl = "https://example.com/milk.jpg",
+                isSaved = true
+            ),
+            ProductDomain(
+                barcode = "9876543210987",
+                name = "Whole Wheat Bread",
+                productType = ProductTypeEnum.FOOD,
+                ingredients = "Whole wheat flour, water, yeast, salt",
+                energyKcal = 247.0,
+                proteins = 13.0,
+                carbs = 41.0,
+                sugars = 4.0,
+                fat = 3.0,
+                saturatedFat = 0.5,
+                fibre = 7.0,
+                salt = 1.0,
+                imageUrl = "https://example.com/bread.jpg",
+                isSaved = false
+            ),
+            ProductDomain(
+                barcode = "5555555555555",
+                name = "Greek Yogurt",
+                productType = ProductTypeEnum.FOOD,
+                ingredients = "Milk, live active cultures",
+                energyKcal = 59.0,
+                proteins = 10.0,
+                carbs = 3.6,
+                sugars = 3.2,
+                fat = 0.4,
+                saturatedFat = 0.1,
+                fibre = 0.0,
+                salt = 0.1,
+                imageUrl = "https://example.com/yogurt.jpg",
+                isSaved = true
+            )
+        ),
+        onItemClick = { barcode -> },
+        onNavigateBack = { }
+    )
+}
+
+@Preview
+@Composable
+fun HistoryScreenEmptyPreview() {
+    HistoryScreenContent(
+        historyList = emptyList(),
+        onItemClick = { },
+        onNavigateBack = { }
+    )
 }
