@@ -10,13 +10,18 @@ import androidx.camera.core.Preview.Builder
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -41,6 +46,17 @@ fun ScannerView(
     onBarcodeDetected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Composition is going to run in preview, not runtime
+    if (LocalInspectionMode.current) {
+        Box(
+            modifier = modifier.background(Color.DarkGray),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Camera preview", color = Color.White)
+        }
+        return
+    }
+
     val context = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
