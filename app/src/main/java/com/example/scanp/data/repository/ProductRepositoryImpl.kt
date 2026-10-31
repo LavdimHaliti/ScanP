@@ -7,7 +7,9 @@ import com.example.scanp.data.local.dao.ScanHistoryDao
 import com.example.scanp.data.mapper.toProductDomain
 import com.example.scanp.data.mapper.toProductEntity
 import com.example.scanp.network.OpenFoodFactsApi
+import com.example.scanp.util.ApiHttpException
 import com.example.scanp.util.General.toDefaultValuesDomain
+import com.example.scanp.util.ProductNotFoundException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -36,10 +38,10 @@ class ProductRepositoryImpl(
                     Result.success(domain)
                 }
                 response.code() == 404 -> {
-                    Result.failure(Exception("Product not found"))
+                    Result.failure(ProductNotFoundException(barcode))
                 }
                 else -> {
-                    Result.failure(Exception("API Error: ${response.code()}"))
+                    Result.failure(ApiHttpException(response.code()))
                 }
             }
         } catch (e: Exception) {
