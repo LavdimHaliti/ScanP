@@ -2,7 +2,11 @@ package com.example.scanp.util
 
 object Constants {
 
-    const val BASE_URL = "https://world.openfoodfacts.net/api/v3/"
+    const val FOOD_BASE_URL = "https://world.openfoodfacts.net/"
+    const val BEAUTY_BASE_URL = "https://world.openbeautyfacts.org/"
+
+    const val FOOD_SEARCH = "foodSearch"
+    const val BEAUTY_SEARCH = "beautySearch"
 
     const val FOOD_TYPE = "food"
     const val BEAUTY_TYPE = "beauty"

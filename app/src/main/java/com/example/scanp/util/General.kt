@@ -2,6 +2,7 @@ package com.example.scanp.util
 
 import com.example.scanp.data.domain.ProductDomain
 import com.example.scanp.data.local.entities.ScanHistoryEntity
+import okio.IOException
 
 object General {
 
@@ -28,6 +29,18 @@ object General {
             imageUrl = null,
             isSaved = false
         )
+    }
+
+    fun Throwable.errorUerMessage(): String = when (this) {
+        is RateLimitException -> {
+            "Too many searches right now. Please wait a minute and try again."
+        }
+        is IOException -> {
+            "No internet connection. Check your network and try again."
+        }
+        else -> {
+            message ?: "Couldn't search products. Please try again."
+        }
     }
 
 }

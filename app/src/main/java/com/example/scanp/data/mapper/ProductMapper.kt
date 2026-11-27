@@ -48,7 +48,7 @@ fun ProductDto.toProductDomain(barcode: String, isSaved: Boolean = false): Produ
     val productType = ProductTypeEnum.productTypeFromApi(productType)
 
     return ProductDomain(
-        barcode = barcode,
+        barcode = code ?: barcode,
         name = productName,
         productType = ProductTypeEnum.productTypeFromApi(productType.name),
         ingredients = ingredientsText,

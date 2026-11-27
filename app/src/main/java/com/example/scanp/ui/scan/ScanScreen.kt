@@ -22,6 +22,7 @@ fun ScanScreen(
     navigateToNutrition: (String) -> Unit,
     navigateToIngredientList: (String) -> Unit,
     navigateToHistory: () -> Unit,
+    navigateToSearch: () -> Unit,
     viewModel: ScanViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -37,6 +38,7 @@ fun ScanScreen(
         navigateToNutrition = { barcode -> navigateToNutrition(barcode) },
         navigateToIngredientList = { barcode -> navigateToIngredientList(barcode) },
         navigateToHistory = { navigateToHistory() },
+        navigateToSearch = { navigateToSearch() },
         resetScan = {
             viewModel.resetScan()
             scanKey++
@@ -59,6 +61,7 @@ fun ScanScreenContent(
     navigateToNutrition: (String) -> Unit,
     navigateToIngredientList: (String) -> Unit,
     navigateToHistory: () -> Unit,
+    navigateToSearch: () -> Unit,
     resetScan: () -> Unit,
     clearError: () -> Unit,
     onShowBarcodeDialog: () -> Unit,
@@ -153,13 +156,23 @@ fun ScanScreenContent(
                 onClick = { onShowBarcodeDialog() },
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text("Enter Barcode")
+                Text("Barcode", maxLines = 1, fontSize = 12.sp)
             }
+            Spacer(modifier = Modifier.width(16.dp))
             Button(
-                onClick = { navigateToHistory() },
+                onClick = { navigateToSearch() },
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text("History")
+                Text("Search", maxLines = 1, fontSize = 12.sp)
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            OutlinedButton(
+                onClick = { navigateToHistory() },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp)
+            ) {
+                Text("History", maxLines = 1, fontSize = 12.sp)
             }
         }
 
@@ -395,6 +408,7 @@ fun ScanScreenPreview() {
         fetchProduct = {},
         navigateToHistory = {},
         navigateToNutrition = {},
+        navigateToSearch = {},
         navigateToIngredientList = {},
         resetScan = {},
         clearError = {},

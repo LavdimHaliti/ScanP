@@ -2,16 +2,20 @@ package com.example.scanp.data.repository
 
 import com.example.scanp.data.local.entities.ScanHistoryEntity
 import com.example.scanp.data.domain.ProductDomain
+import com.example.scanp.data.domain.SearchResultDomain
 import com.example.scanp.data.local.dao.ProductDao
 import com.example.scanp.data.local.dao.ScanHistoryDao
 import com.example.scanp.data.mapper.toProductDomain
 import com.example.scanp.data.mapper.toProductEntity
+import com.example.scanp.network.OpenFactsSearchApi
 import com.example.scanp.network.OpenFoodFactsApi
 import com.example.scanp.util.ApiHttpException
 import com.example.scanp.util.General.toDefaultValuesDomain
 import com.example.scanp.util.ProductNotFoundException
+import com.example.scanp.util.RateLimitException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import okio.IOException
 
 /**
  * Concrete implementation of [ProductRepository] that fetches product data
@@ -19,9 +23,66 @@ import kotlinx.coroutines.flow.map
  */
 class ProductRepositoryImpl(
     private val api: OpenFoodFactsApi,
+    private val foodSearchApi: OpenFactsSearchApi,
+    private val beautySearchApi: OpenFactsSearchApi,
     private val productDao: ProductDao,
     private val scanHistoryDao: ScanHistoryDao
 ) : ProductRepository {
+    override suspend fun searchProduct(brand: String): Result<SearchResultDomain> {
+        return try {
+            val foodResponse = foodSearchApi.searchProduct(brand = brand)
+            val beautyResponse = beautySearchApi.searchProduct(brand = brand)
+
+            when {
+                foodResponse.isSuccessful && foodResponse.body() != null -> {
+                    val responseBody = foodResponse.body()!!
+                    Result.success(
+                        SearchResultDomain(
+                            products = responseBody.products
+                                .filter {
+                                    !it.code.isNullOrBlank()
+                                }.map {
+                                    it.toProductDomain(it.code!!)
+                                }.distinctBy {
+                                    it.barcode
+                                },
+                            page = responseBody.page,
+                            pageCount = responseBody.pageCount,
+                            totalCount = responseBody.count
+                        )
+                    )
+                }
+                beautyResponse.isSuccessful && beautyResponse.body() != null -> {
+                    val responseBody = beautyResponse.body()!!
+                    Result.success(
+                        SearchResultDomain(
+                            products = responseBody.products
+                                .filter {
+                                    !it.code.isNullOrBlank()
+                                }.map {
+                                    it.toProductDomain(it.code!!)
+                                }.distinctBy {
+                                    it.barcode
+                                },
+                            page = responseBody.page,
+                            pageCount = responseBody.pageCount,
+                            totalCount = responseBody.count
+                        )
+                    )
+                }
+                foodResponse.code() == 429 || beautyResponse.code() == 429 -> {
+                    Result.failure(RateLimitException())
+                }
+                else -> {
+                    Result.failure(ApiHttpException(foodResponse.code()))
+                }
+            }
+        } catch (e: IOException) {
+            Result.failure(e)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     /**
      * Retrieves a product by barcode from the remote API.

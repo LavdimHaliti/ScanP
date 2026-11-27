@@ -19,4 +19,7 @@ sealed interface Route : NavKey {
     data object HistoryScreen: Route, NavKey
     companion object {
     }
+
+    @Serializable
+    data object SearchScreen : Route
 }

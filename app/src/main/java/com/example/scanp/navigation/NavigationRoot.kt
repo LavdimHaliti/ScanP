@@ -10,9 +10,11 @@ import com.example.scanp.ui.history.HistoryScreen
 import com.example.scanp.ui.ingredient.IngredientListScreen
 import com.example.scanp.ui.nutrition.NutritionDetailScreen
 import com.example.scanp.ui.scan.ScanScreen
+import com.example.scanp.ui.search.SearchScreen
 import com.example.scanp.viewmodel.HistoryViewModel
 import com.example.scanp.viewmodel.ProductDetailViewModel
 import com.example.scanp.viewmodel.ScanViewModel
+import com.example.scanp.viewmodel.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -22,6 +24,7 @@ fun NavigationRoot() {
     val scanViewModel: ScanViewModel = koinViewModel()
     val scanHistoryViewModel: HistoryViewModel = koinViewModel()
     val productDetailViewModel: ProductDetailViewModel = koinViewModel()
+    val searchViewModel: SearchViewModel = koinViewModel()
 
     NavDisplay(
         backStack = backStack,
@@ -39,7 +42,8 @@ fun NavigationRoot() {
                             },
                             navigateToIngredientList = { barcode ->
                                 backStack.add(Route.IngredientListScreen(barcode))
-                            }
+                            },
+                            navigateToSearch = { backStack.add(Route.SearchScreen) }
                         )
                     }
                 }
@@ -69,6 +73,15 @@ fun NavigationRoot() {
                         NutritionDetailScreen(
                             viewModel = productDetailViewModel,
                             barcode = key.barcode,
+                            onNavigateBack = { backStack.removeLastOrNull() }
+                        )
+                    }
+                }
+
+                is Route.SearchScreen -> {
+                    NavEntry(key) {
+                        SearchScreen(
+                            viewModel = searchViewModel,
                             onNavigateBack = { backStack.removeLastOrNull() }
                         )
                     }

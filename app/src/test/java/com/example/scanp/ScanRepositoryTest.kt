@@ -14,6 +14,7 @@ import com.example.scanp.data.remote.dto.NutrimentsDto
 import com.example.scanp.data.remote.dto.ProductDto
 import com.example.scanp.data.remote.dto.ProductResponseDto
 import com.example.scanp.data.repository.ProductRepositoryImpl
+import com.example.scanp.network.OpenFactsSearchApi
 import com.example.scanp.network.OpenFoodFactsApi
 import com.example.scanp.util.ApiHttpException
 import com.example.scanp.util.ProductNotFoundException
@@ -43,6 +44,9 @@ class ScanRepositoryTest {
     private lateinit var productDao: ProductDao
     private lateinit var historyDao: ScanHistoryDao
     private lateinit var api: OpenFoodFactsApi
+
+    private lateinit var foodSearchApi: OpenFactsSearchApi
+    private lateinit var beautySearchApi: OpenFactsSearchApi
     private lateinit var repository: ProductRepositoryImpl
 
     @Before
@@ -54,7 +58,7 @@ class ScanRepositoryTest {
         historyDao = database.scanHistoryDao()
         api = mockk(relaxed = true)
 
-        repository = ProductRepositoryImpl(api, productDao, historyDao)
+        repository = ProductRepositoryImpl(api, foodSearchApi, beautySearchApi, productDao, historyDao)
     }
 
     @After
@@ -175,6 +179,7 @@ class ScanRepositoryTest {
         ingredientsText: String = "Water, Sugar, Salt",
         productType: String = "food"
     ) = ProductDto(
+        code = null,
         productName = productName,
         ingredientsText = ingredientsText,
         imageSmallUrl = null,

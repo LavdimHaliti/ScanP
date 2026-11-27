@@ -3,6 +3,9 @@ package com.example.scanp.data.remote.dto
 import com.google.gson.annotations.SerializedName
 
 data class ProductDto(
+    @SerializedName("code")
+    val code: String?,
+
     @SerializedName("product_name")
     val productName: String?,
 
